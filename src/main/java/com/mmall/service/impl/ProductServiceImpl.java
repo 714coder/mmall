@@ -19,6 +19,7 @@ import com.mmall.util.DateTimeUtil;
 import com.mmall.util.PropertiesUtil;
 import com.mmall.vo.ProductDetailVo;
 import com.mmall.vo.ProductListVo;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -129,7 +130,34 @@ public class ProductServiceImpl implements IProductService {
         }
         return validResponse;
     }
-
+    /**
+     * @Desciption:
+     * @Date: 13:40 2018/3/10
+     */
+    public ServerResponse<PageInfo> searchProduct(HttpSession session,String productName,Integer productId,Integer pageNum,Integer pageSize){
+        ServerResponse validResponse = UserServiceImpl.checkAdminRole(session);
+        if(validResponse.isSuccess()){
+            PageHelper.startPage(pageNum,pageSize);
+            if(StringUtils.isNotBlank(productName)){
+                //字符串拼接成模糊查询标准格式
+                productName = new StringBuilder().append("%").append(productName).append("%").toString();
+            }
+            List<ProductListVo> productListVoList = Lists.newArrayList();
+            List<Product> productList = productMapper.selectByNameOrProductId(productName,productId);
+            if(!productList.isEmpty()){
+                for (Product productItem : productList) {
+                    ProductListVo productListVo = new ProductListVo(productItem);
+                    productListVoList.add(productListVo);
+                }
+                PageInfo pageResult = new PageInfo(productList);
+                pageResult.setList(productListVoList);
+                return ServerResponse.createBySuccess("检索成功",pageResult);
+            }else{
+                return ServerResponse.createByErrorMessage("检索不到相关产品");
+            }
+        }
+        return validResponse;
+    }
     /**
      * @Desciption:取从图第一个图片作为主图
      * @Date: 9:26 2018/3/10
@@ -159,7 +187,7 @@ public class ProductServiceImpl implements IProductService {
                 return ServerResponse.createByErrorMessage(ResponseCode.ILLEGAL_ARGUMENT.getDesc());
             }
         }
-        return ServerResponse.createByErrorMessage("找不到要操作的类型");
+        return ServerResponse.createByErrorMessage("找不到要更新的类型");
     }
     /**
      * @Desciption:组装productDetailVo对象

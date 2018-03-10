@@ -188,4 +188,17 @@
     from mmall_product
     order by price desc
   </select>
+  <select id="selectByNameOrProductId" resultMap="BaseResultMap" parameterType="map">
+    select
+      <include refid="Base_Column_List"/>
+    from mmall_product
+    <where>
+      <if test="productName != null">
+        and name like #{productName}
+      </if>
+      <if test="productId != null">
+        and id = #{productId}
+      </if>
+    </where>
+  </select>
 </mapper>

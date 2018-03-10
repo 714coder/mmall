@@ -21,4 +21,6 @@ public interface ProductMapper {
     int updateStatusByProductId(@Param("status") Integer status, @Param("productId") Integer productId);
 
     List<Product> selectList();  //mybatis pagehelper 使用aop传入startpage()中的pageNum,pageSize增强sql语句所以order by语句没有;结尾
+
+    List<Product> selectByNameOrProductId(@Param("productName") String productName,@Param("productId") Integer productId);
 }

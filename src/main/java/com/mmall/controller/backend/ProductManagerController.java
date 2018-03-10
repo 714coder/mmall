@@ -50,4 +50,10 @@ public class ProductManagerController {
     public ServerResponse<PageInfo> getProductList(HttpSession session, @RequestParam(value = "pageNum",defaultValue = "1") Integer pageNum, @RequestParam(value = "pageSize",defaultValue = "10") Integer pageSize){
         return iProductService.getProductList(session,pageNum,pageSize);
     }
+
+    @RequestMapping("search_product.do")
+    @ResponseBody
+    public ServerResponse<PageInfo> searchProduct(HttpSession session, String productName, Integer productId, @RequestParam(value = "pageNum",defaultValue = "1") Integer pageNum, @RequestParam(value = "pageSize",defaultValue = "10") Integer pageSize){
+        return iProductService.searchProduct(session,productName,productId,pageNum,pageSize);
+    }
 }

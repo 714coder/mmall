@@ -25,4 +25,6 @@ public interface IProductService {
     ServerResponse<ProductDetailVo> manageProductDetail(HttpSession session, Integer productId);
 
     ServerResponse<PageInfo> getProductList(HttpSession session, Integer pageNum, Integer pageSize);
+
+    ServerResponse<PageInfo> searchProduct(HttpSession session,String productName,Integer productId,Integer pageNum,Integer pageSize);
 }
